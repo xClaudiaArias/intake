@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  STAFF
+  ADMIN
+}
+
+enum IntakeStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+}
+
+enum AppointmentStatus {
+  BOOKED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(PATIENT)
+  createdAt     DateTime @default(now())
+
+  patientProfile PatientProfile?
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+model PatientProfile {
+  id               String   @id @default(uuid())
+  userId           String   @unique @map("user_id")
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name             String
+  dob              DateTime
+  phone            String?
+  address          String?
+  emergencyContact String?  @map("emergency_contact")
+  createdAt        DateTime @default(now())
+
+  intakeForm   IntakeForm?
+  appointments Appointment[]
+
+  @@map("patient_profiles")
+}
+
+model IntakeForm {
+  id             String       @id @default(uuid())
+  patientId      String       @unique @map("patient_id")
+  patient        PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  insuranceInfo  Json?        @map("insurance_info")
+  medicalHistory Json?        @map("medical_history")
+  status         IntakeStatus @default(DRAFT)
+  submittedAt    DateTime?    @map("submitted_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@map("intake_forms")
+}
+
+model Slot {
+  id          String   @id @default(uuid())
+  startTime   DateTime @map("start_time")
+  endTime     DateTime @map("end_time")
+  isAvailable Boolean  @default(true) @map("is_available")
+
+  appointment Appointment?
+
+  @@map("slots")
+}
+
+model Appointment {
+  id            String            @id @default(uuid())
+  patientId     String            @map("patient_id")
+  patient       PatientProfile    @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  slotId        String            @unique @map("slot_id")
+  slot          Slot              @relation(fields: [slotId], references: [id])
+  status        AppointmentStatus @default(BOOKED)
+  reasonForVisit String?          @map("reason_for_visit")
+  symptomNotes  String?           @map("symptom_notes")
+  checkedInAt   DateTime?         @map("checked_in_at")
+  createdAt     DateTime          @default(now())
+
+  @@map("appointments")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String   @map("actor_id")
+  actor      User     @relation(fields: [actorId], references: [id])
+  action     String
+  targetType String   @map("target_type")
+  targetId   String?  @map("target_id")
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
