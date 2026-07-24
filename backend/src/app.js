@@ -22,8 +22,6 @@ app.use('/api/v1/intake', intakeRoutes);
 app.use('/api/v1/slots', slotsRoutes);
 app.use('/api/v1/appointments', appointmentsRoutes);
 
-// TODO: mount /api/v1/users (admin staff management) and
-// /api/v1/audit-logs (admin-only log viewer) once built - see SRS FR-6, FR-8.
 
 app.use(errorHandler);
 
