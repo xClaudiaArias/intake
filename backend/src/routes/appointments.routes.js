@@ -2,12 +2,12 @@ const express = require('express');
 const { requireAuth } = require('../middleware/auth.middleware');
 const { requireRole } = require('../middleware/rbac.middleware');
 const {
-    book,
-    listMine,
-    cancel,
-    updateSymptoms,
-    listToday,
-    checkIn,
+  book,
+  listMine,
+  cancel,
+  updateSymptoms,
+  listToday,
+  checkIn,
 } = require('../controllers/appointments.controller');
 
 const router = express.Router();

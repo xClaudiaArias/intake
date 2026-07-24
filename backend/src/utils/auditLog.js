@@ -1,6 +1,9 @@
 const prisma = require('./prisma');
 
-/**  Records an entry in the append-only audit log. Call this any time a user views or modifies PHI-equivalent data (intake forms, appointments, patient profiles).
+/**
+ * Records an entry in the append-only audit log.
+ * Call this any time a user views or modifies PHI-equivalent data
+ * (intake forms, appointments, patient profiles).
  *
  * @param {Object} params
  * @param {string} params.actorId - id of the User performing the action
