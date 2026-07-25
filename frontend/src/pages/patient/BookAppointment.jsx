@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import client from '../../api/client';
+import { TraceLine } from '../../components/Layout.jsx';
 
 export default function BookAppointment() {
     const [slots, setSlots] = useState([]);
@@ -26,21 +27,32 @@ export default function BookAppointment() {
 
     return (
         <div>
-        <h1>Book an appointment</h1>
-        <label>
+        <div className="page-header">
+            <h1>Book an appointment</h1>
+            <TraceLine />
+        </div>
+
+        <div className="card">
+            <label>
             Reason for visit
-            <input value={reasonForVisit} onChange={(e) => setReasonForVisit(e.target.value)} />
-        </label>
-        {message && <p className="error">{message}</p>}
-        <ul>
+            <input value={reasonForVisit} onChange={(e) => setReasonForVisit(e.target.value)} placeholder="e.g. Annual checkup" />
+            </label>
+        </div>
+
+        {message && <p className="error" style={{ marginTop: 'var(--space-4)' }}>{message}</p>}
+
+        {slots.length === 0 ? (
+            <p className="hint" style={{ marginTop: 'var(--space-4)' }}>No open slots right now.</p>
+        ) : (
+            <ul className="slot-list">
             {slots.map((slot) => (
-            <li key={slot.id}>
+                <li key={slot.id}>
                 {new Date(slot.startTime).toLocaleString()}
                 <button onClick={() => book(slot.id)}>Book</button>
-            </li>
+                </li>
             ))}
-        </ul>
-        {slots.length === 0 && <p>No open slots right now.</p>}
+            </ul>
+        )}
         </div>
     );
 }
