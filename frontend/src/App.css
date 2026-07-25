@@ -64,8 +64,7 @@ h2 { font-size: 1.25rem; }
 
 a { color: var(--primary); }
 
-/*  Layout shell (header + nav + content) */
-
+/* Layout shell (header + nav + content) */
 .app-shell {
     min-height: 100vh;
     display: flex;
@@ -154,7 +153,8 @@ a { color: var(--primary); }
     padding: var(--space-6);
 }
 
-
+/* A quiet signature divider - a single trace line under page titles,
+   standing in for the "vitals line" of a chart without being literal. */
 .page-header {
     margin-bottom: var(--space-6);
 }
@@ -164,7 +164,7 @@ a { color: var(--primary); }
     margin-top: var(--space-2);
 }
 
-/*  Cards & surfaces */
+/* Cards & surfaces */
 .card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -216,6 +216,61 @@ input:disabled, textarea:disabled {
 
 textarea { min-height: 80px; resize: vertical; }
 
+select {
+    font-family: var(--font-body);
+    padding: var(--space-3);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--surface);
+}
+
+select:focus { outline: none; border-color: var(--primary); box-shadow: var(--focus-ring); }
+select:disabled { background: var(--surface-sunken); color: var(--ink-faint); }
+
+/* Multi-section forms (e.g. intake form) - each section is a card,
+   fields lay out in a responsive two-column grid. */
+.card h2 {
+    font-size: 1rem;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+}
+
+.form-grid .span-2 { grid-column: span 2; }
+
+@media (max-width: 560px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .span-2 { grid-column: span 1; }
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2) var(--space-4);
+}
+
+.checkbox-label {
+    flex-direction: row !important;
+    align-items: center;
+    gap: var(--space-2) !important;
+    font-weight: 400;
+    color: var(--ink);
+    font-size: 0.9rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--primary);
+}
+
 /* Buttons */
 button {
     font-family: var(--font-body);
@@ -248,8 +303,7 @@ button[type="button"]:not(.btn-logout):hover {
     background: var(--primary-tint);
 }
 
-/*  Status badges - styled like chart / folder tabs */
-
+/* Status badges - styled like chart / folder tabs */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -270,7 +324,6 @@ button[type="button"]:not(.btn-logout):hover {
 .badge--cancelled { background: var(--rose-tint); color: var(--rose); }
 
 /* Tables (staff dashboard) */
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -302,7 +355,6 @@ td:has(button) button {
 }
 
 /* Slot list (booking page) */
-
 .slot-list {
     list-style: none;
     padding: 0;
@@ -355,7 +407,7 @@ td:has(button) button {
     color: var(--ink-muted);
 }
 
-
+/* Auth pages */
 .auth-page {
     max-width: 380px;
     margin: var(--space-7) auto;
