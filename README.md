@@ -46,6 +46,16 @@ npm run seed
 npm run dev              # http://localhost:4000
 ```
 
+> If you're pulling this update into an existing local database (one that
+> already ran `--name init`), the `IntakeForm` model gained new columns
+> (`demographics`, `emergencyContact`, `lifestyle`, `consent`). Run one more
+> migration to pick them up:
+> ```bash
+> npx prisma migrate dev --name expand_intake_form
+> ```
+> Fresh clones don't need this extra step — `--name init` already captures
+> the current schema in one go.
+
 Demo logins after seeding:
 - Staff: `nurse@demo-clinic.test` / `StaffDemo123!`
 - Patient: `patient@demo-clinic.test` / `PatientDemo123!`
@@ -58,6 +68,9 @@ npm run dev               # http://localhost:5173
 ```
 
 ## What's built vs. what's next
-Implemented: registration/login (JWT), patient intake form (draft/submit), slot-based appointment booking with race-condition protection, symptom notes, staff daily dashboard with check-in, and an append-only audit log.
+Implemented: registration/login (JWT), a full multi-section patient intake form (personal info, emergency contact, insurance with a US-payer dropdown, medical history, lifestyle, and consent — draft/submit, with the backend enforcing that consent is completed before submission), slot-based appointment booking with race-condition protection, symptom notes, staff daily dashboard with check-in, logout, and an append-only audit log.
 
-Not yet built (see SRS section 3.9 for the full future-work list): email notifications, admin UI for managing staff accounts and clinic hours, automated tests, and the cancellation-window enforcement (stubbed with a TODO in `appointments.controller.js`).
+Not yet built (see SRS section 3.9 for the full future-work list): a staff-facing page to view a submitted intake form's full contents (the API route `GET /api/v1/intake/:patientId` already exists for this — FR-2.4 — it just has no frontend yet), email notifications, admin UI for managing staff accounts and clinic hours, automated tests, and the cancellation-window enforcement (stubbed with a TODO in `appointments.controller.js`).
+
+## Design system
+The frontend uses a small custom token system (see the top of `frontend/src/App.css`) rather than a component library: a sage/pine color palette, `Space Grotesk` for headings, `Inter` for body text, and `IBM Plex Mono` for timestamps and data. Status values (appointments, intake forms) render as color-coded badges (`.badge--*` classes). `components/Layout.jsx` holds the shared header, role-based nav, and logout button that wraps every authenticated page.
