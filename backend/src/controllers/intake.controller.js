@@ -2,16 +2,20 @@ const { z } = require('zod');
 const prisma = require('../utils/prisma');
 const { recordAudit } = require('../utils/auditLog');
 
+
 const intakeSchema = z.object({
+  demographics: z.record(z.any()).optional(),
+  emergencyContact: z.record(z.any()).optional(),
   insuranceInfo: z.record(z.any()).optional(),
   medicalHistory: z.record(z.any()).optional(),
+  lifestyle: z.record(z.any()).optional(),
+  consent: z.record(z.any()).optional(),
 });
 
 async function getOwnProfile(userId) {
   return prisma.patientProfile.findUnique({ where: { userId } });
 }
 
-// GET /api/v1/intake  (patient: their own form)
 async function getMine(req, res) {
   const profile = await getOwnProfile(req.user.id);
   if (!profile) return res.status(404).json({ error: 'Patient profile not found' });
@@ -20,7 +24,7 @@ async function getMine(req, res) {
   res.json(form || null);
 }
 
-// PUT /api/v1/intake  (patient: save as draft) - FR-2.2
+
 async function saveDraft(req, res) {
   const data = intakeSchema.parse(req.body);
   const profile = await getOwnProfile(req.user.id);
@@ -40,20 +44,27 @@ async function saveDraft(req, res) {
   res.json(form);
 }
 
-// POST /api/v1/intake/submit  (patient: lock the form) - FR-2.3
 async function submit(req, res) {
   const profile = await getOwnProfile(req.user.id);
   if (!profile) return res.status(404).json({ error: 'Patient profile not found' });
 
-  const form = await prisma.intakeForm.update({
+  const form = await prisma.intakeForm.findUnique({ where: { patientId: profile.id } });
+  if (!form) {
+    return res.status(400).json({ error: 'Save the form as a draft before submitting' });
+  }
+  if (!form.consent?.treatmentConsent || !form.consent?.privacyAcknowledged || !form.consent?.signatureName) {
+    return res.status(400).json({ error: 'Consent section must be completed before submitting' });
+  }
+
+  const updated = await prisma.intakeForm.update({
     where: { patientId: profile.id },
     data: { status: 'SUBMITTED', submittedAt: new Date() },
   });
 
-  res.json(form);
+  res.json(updated);
 }
 
-// GET /api/v1/intake/:patientId  (staff/admin, read-only) - FR-2.4
+
 async function getForPatient(req, res) {
   const form = await prisma.intakeForm.findUnique({
     where: { patientId: req.params.patientId },
