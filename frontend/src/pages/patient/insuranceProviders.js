@@ -1,0 +1,16 @@
+export const INSURANCE_PROVIDERS = [
+    'UnitedHealthcare',
+    'Blue Cross Blue Shield',
+    'Elevance Health (Anthem)',
+    'Aetna (CVS Health)',
+    'Cigna',
+    'Humana',
+    'Kaiser Permanente',
+    'Centene',
+    'Molina Healthcare',
+    'Medicare',
+    'Medicaid',
+    'TRICARE',
+    'Self-pay / No insurance',
+    'Other',
+];
