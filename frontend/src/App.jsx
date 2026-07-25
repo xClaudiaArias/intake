@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Layout from './components/Layout.jsx';
 
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
@@ -21,45 +22,47 @@ function Home() {
     export default function App() {
     return (
         <AuthProvider>
-        <Routes>
+        <Layout>
+            <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
             <Route
-            path="/dashboard"
-            element={
+                path="/dashboard"
+                element={
                 <ProtectedRoute allowedRoles={['PATIENT']}>
-                <PatientDashboard />
+                    <PatientDashboard />
                 </ProtectedRoute>
-            }
+                }
             />
             <Route
-            path="/intake"
-            element={
+                path="/intake"
+                element={
                 <ProtectedRoute allowedRoles={['PATIENT']}>
-                <IntakeForm />
+                    <IntakeForm />
                 </ProtectedRoute>
-            }
+                }
             />
             <Route
-            path="/book"
-            element={
+                path="/book"
+                element={
                 <ProtectedRoute allowedRoles={['PATIENT']}>
-                <BookAppointment />
+                    <BookAppointment />
                 </ProtectedRoute>
-            }
+                }
             />
 
             <Route
-            path="/staff"
-            element={
+                path="/staff"
+                element={
                 <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
-                <StaffDashboard />
+                    <StaffDashboard />
                 </ProtectedRoute>
-            }
+                }
             />
-        </Routes>
+            </Routes>
+        </Layout>
         </AuthProvider>
     );
 }
