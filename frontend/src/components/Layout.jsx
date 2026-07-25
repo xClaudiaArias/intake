@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
+
 function TraceLine() {
     return (
         <svg width="120" height="10" viewBox="0 0 120 10" fill="none" aria-hidden="true">
@@ -14,9 +15,9 @@ function TraceLine() {
         />
         </svg>
     );
-}
+    }
 
-const NAV_LINKS = {
+    const NAV_LINKS = {
     PATIENT: [
         { to: '/dashboard', label: 'Appointments' },
         { to: '/intake', label: 'Intake form' },
