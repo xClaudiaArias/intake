@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { TraceLine } from '../components/Layout.jsx';
 
 export default function Register() {
     const [form, setForm] = useState({ name: '', email: '', password: '', dob: '' });
@@ -24,28 +25,33 @@ export default function Register() {
     }
 
     return (
-            <div className="auth-page">
+        <div className="auth-page">
+        <div className="page-header">
             <h1>Create your account</h1>
+            <TraceLine />
+        </div>
+        <div className="card">
             <form onSubmit={handleSubmit}>
-                <label>
+            <label>
                 Full name
                 <input value={form.name} onChange={update('name')} required />
-                </label>
-                <label>
+            </label>
+            <label>
                 Date of birth
                 <input type="date" value={form.dob} onChange={update('dob')} required />
-                </label>
-                <label>
+            </label>
+            <label>
                 Email
                 <input type="email" value={form.email} onChange={update('email')} required />
-                </label>
-                <label>
+            </label>
+            <label>
                 Password
                 <input type="password" value={form.password} onChange={update('password')} required minLength={8} />
-                </label>
-                {error && <p className="error">{error}</p>}
-                <button type="submit">Create account</button>
+            </label>
+            {error && <p className="error">{error}</p>}
+            <button type="submit">Create account</button>
             </form>
-            </div>
-        );
+        </div>
+        </div>
+    );
 }
