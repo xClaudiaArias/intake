@@ -96,3 +96,5 @@ export default function IntakeForm() {
         </div>
     );
 }
+
+// TODO: Update the form to be more aligned with clinic intake forms. include interactive and visual buttons. 
