@@ -15,7 +15,7 @@ const CHRONIC_CONDITIONS = [
 
 const emptyState = {
     demographics: {
-        address: '', city: '', state: '', zip: '',
+        fullName: '', address: '', city: '', state: '', zip: '',
         phone: '', email: '',
         sexAssignedAtBirth: '', maritalStatus: '',
         employer: '', occupation: '', preferredPharmacy: '',
@@ -33,7 +33,6 @@ const emptyState = {
     consent: { treatmentConsent: false, privacyAcknowledged: false, financialAcknowledged: false, signatureName: '' },
 };
 
-
 function useSection(initial) {
     const [value, setValue] = useState(initial);
     const update = (field) => (e) => {
@@ -41,9 +40,9 @@ function useSection(initial) {
         setValue((prev) => ({ ...prev, [field]: val }));
     };
     return [value, setValue, update];
-}
+    }
 
-export default function IntakeForm() {
+    export default function IntakeForm() {
     const [status, setStatus] = useState('DRAFT');
     const [demographics, setDemographics, updateDemographics] = useSection(emptyState.demographics);
     const [emergencyContact, setEmergencyContact, updateEmergencyContact] = useSection(emptyState.emergencyContact);
@@ -57,10 +56,20 @@ export default function IntakeForm() {
 
     useEffect(() => {
         client.get('/intake').then((res) => {
-        const form = res.data;
+        const { form, profileDefaults } = res.data;
+
+        setStatus(form?.status || 'DRAFT');
+
+        // Prefill name/email from the account, but let a previously saved
+        // draft's values win if the patient already edited them.
+        setDemographics((prev) => ({
+            ...prev,
+            fullName: profileDefaults?.fullName || '',
+            email: profileDefaults?.email || '',
+            ...(form?.demographics || {}),
+        }));
+
         if (!form) return;
-        setStatus(form.status);
-        if (form.demographics) setDemographics((prev) => ({ ...prev, ...form.demographics }));
         if (form.emergencyContact) setEmergencyContact((prev) => ({ ...prev, ...form.emergencyContact }));
         if (form.insuranceInfo) setInsuranceInfo((prev) => ({ ...prev, ...form.insuranceInfo }));
         if (form.medicalHistory) setMedicalHistory((prev) => ({ ...prev, ...form.medicalHistory }));
@@ -140,6 +149,10 @@ export default function IntakeForm() {
             <section className="card">
             <h2>Personal information</h2>
             <div className="form-grid">
+                <label className="span-2">
+                Full name
+                <input value={demographics.fullName} onChange={updateDemographics('fullName')} disabled={locked} />
+                </label>
                 <label className="span-2">
                 Street address
                 <input value={demographics.address} onChange={updateDemographics('address')} disabled={locked} />
