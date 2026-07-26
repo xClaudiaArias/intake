@@ -2,7 +2,6 @@ const { z } = require('zod');
 const prisma = require('../utils/prisma');
 const { recordAudit } = require('../utils/auditLog');
 
-
 const intakeSchema = z.object({
   demographics: z.record(z.any()).optional(),
   emergencyContact: z.record(z.any()).optional(),
@@ -13,17 +12,21 @@ const intakeSchema = z.object({
 });
 
 async function getOwnProfile(userId) {
-  return prisma.patientProfile.findUnique({ where: { userId } });
+  return prisma.patientProfile.findUnique({ where: { userId }, include: { user: true } });
 }
+
 
 async function getMine(req, res) {
   const profile = await getOwnProfile(req.user.id);
   if (!profile) return res.status(404).json({ error: 'Patient profile not found' });
 
   const form = await prisma.intakeForm.findUnique({ where: { patientId: profile.id } });
-  res.json(form || null);
-}
 
+  res.json({
+    form: form || null,
+    profileDefaults: { fullName: profile.name, email: profile.user.email },
+  });
+}
 
 async function saveDraft(req, res) {
   const data = intakeSchema.parse(req.body);
@@ -63,7 +66,6 @@ async function submit(req, res) {
 
   res.json(updated);
 }
-
 
 async function getForPatient(req, res) {
   const form = await prisma.intakeForm.findUnique({
