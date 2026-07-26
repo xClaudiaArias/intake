@@ -17,9 +17,7 @@ async function getOwnProfile(userId) {
   return prisma.patientProfile.findUnique({ where: { userId } });
 }
 
-// POST /api/v1/appointments  (patient books a slot) - FR-3.2, NFR-4.2
-// Wrapped in a transaction: check-then-book happens atomically so two
-// patients can't win the same slot in a race condition.
+
 async function book(req, res) {
   const data = bookSchema.parse(req.body);
   const profile = await getOwnProfile(req.user.id);
@@ -48,7 +46,7 @@ async function book(req, res) {
   res.status(201).json(appointment);
 }
 
-// GET /api/v1/appointments/mine  (patient)
+
 async function listMine(req, res) {
   const profile = await getOwnProfile(req.user.id);
   if (!profile) return res.status(404).json({ error: 'Patient profile not found' });
@@ -61,7 +59,7 @@ async function listMine(req, res) {
   res.json(appointments);
 }
 
-// PATCH /api/v1/appointments/:id/cancel  (patient) - FR-3.2
+
 async function cancel(req, res) {
   const profile = await getOwnProfile(req.user.id);
   const appointment = await prisma.appointment.findUnique({ where: { id: req.params.id } });
@@ -81,7 +79,7 @@ async function cancel(req, res) {
   res.status(204).end();
 }
 
-// PATCH /api/v1/appointments/:id/symptoms  (patient updates reason/notes) - FR-4.1, FR-4.3
+
 async function updateSymptoms(req, res) {
   const data = symptomsSchema.parse(req.body);
   const profile = await getOwnProfile(req.user.id);
@@ -117,7 +115,24 @@ async function listToday(req, res) {
   res.json(appointments);
 }
 
-// PATCH /api/v1/appointments/:id/check-in  (staff) - FR-5.2
+async function listUpcoming(req, res) {
+  const days = Math.min(Number(req.query.days) || 7, 31);
+
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setDate(end.getDate() + days);
+  end.setHours(23, 59, 59, 999);
+
+  const appointments = await prisma.appointment.findMany({
+    where: { slot: { startTime: { gte: start, lte: end } }, status: 'BOOKED' },
+    include: { slot: true, patient: { include: { intakeForm: true } } },
+    orderBy: { slot: { startTime: 'asc' } },
+  });
+
+  res.json(appointments);
+}
+
 async function checkIn(req, res) {
   const appointment = await prisma.appointment.update({
     where: { id: req.params.id },
@@ -134,4 +149,4 @@ async function checkIn(req, res) {
   res.json(appointment);
 }
 
-module.exports = { book, listMine, cancel, updateSymptoms, listToday, checkIn };
+module.exports = { book, listMine, cancel, updateSymptoms, listToday, listUpcoming, checkIn };

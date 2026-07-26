@@ -7,6 +7,7 @@ const {
   cancel,
   updateSymptoms,
   listToday,
+  listUpcoming,
   checkIn,
 } = require('../controllers/appointments.controller');
 
@@ -20,6 +21,8 @@ router.patch('/:id/cancel', requireRole('PATIENT'), cancel);
 router.patch('/:id/symptoms', requireRole('PATIENT'), updateSymptoms);
 
 router.get('/today', requireRole('STAFF', 'ADMIN'), listToday);
+router.get('/upcoming', requireRole('STAFF', 'ADMIN'), listUpcoming);
 router.patch('/:id/check-in', requireRole('STAFF', 'ADMIN'), checkIn);
 
 module.exports = router;
+
