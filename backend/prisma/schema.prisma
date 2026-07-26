@@ -56,14 +56,18 @@ model PatientProfile {
 }
 
 model IntakeForm {
-  id             String       @id @default(uuid())
-  patientId      String       @unique @map("patient_id")
-  patient        PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  insuranceInfo  Json?        @map("insurance_info")
-  medicalHistory Json?        @map("medical_history")
-  status         IntakeStatus @default(DRAFT)
-  submittedAt    DateTime?    @map("submitted_at")
-  updatedAt      DateTime     @updatedAt @map("updated_at")
+  id               String       @id @default(uuid())
+  patientId        String       @unique @map("patient_id")
+  patient          PatientProfile @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  demographics     Json?        @map("demographics")
+  emergencyContact Json?        @map("emergency_contact")
+  insuranceInfo    Json?        @map("insurance_info")
+  medicalHistory   Json?        @map("medical_history")
+  lifestyle        Json?        @map("lifestyle")
+  consent          Json?        @map("consent")
+  status           IntakeStatus @default(DRAFT)
+  submittedAt      DateTime?    @map("submitted_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
 
   @@map("intake_forms")
 }

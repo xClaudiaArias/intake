@@ -36,8 +36,12 @@ CREATE TABLE "patient_profiles" (
 CREATE TABLE "intake_forms" (
     "id" TEXT NOT NULL,
     "patient_id" TEXT NOT NULL,
+    "demographics" JSONB,
+    "emergency_contact" JSONB,
     "insurance_info" JSONB,
     "medical_history" JSONB,
+    "lifestyle" JSONB,
+    "consent" JSONB,
     "status" "IntakeStatus" NOT NULL DEFAULT 'DRAFT',
     "submitted_at" TIMESTAMP(3),
     "updated_at" TIMESTAMP(3) NOT NULL,
