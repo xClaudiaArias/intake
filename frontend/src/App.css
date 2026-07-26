@@ -153,8 +153,6 @@ a { color: var(--primary); }
     padding: var(--space-6);
 }
 
-/* A quiet signature divider - a single trace line under page titles,
-   standing in for the "vitals line" of a chart without being literal. */
 .page-header {
     margin-bottom: var(--space-6);
 }
@@ -229,8 +227,7 @@ select {
 select:focus { outline: none; border-color: var(--primary); box-shadow: var(--focus-ring); }
 select:disabled { background: var(--surface-sunken); color: var(--ink-faint); }
 
-/* Multi-section forms (e.g. intake form) - each section is a card,
-   fields lay out in a responsive two-column grid. */
+
 .card h2 {
     font-size: 1rem;
     margin-bottom: var(--space-4);
@@ -269,6 +266,18 @@ select:disabled { background: var(--surface-sunken); color: var(--ink-faint); }
 .checkbox-label input[type="checkbox"] {
     width: auto;
     accent-color: var(--primary);
+}
+
+.day-group { margin-bottom: var(--space-5); }
+
+.day-group__label {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+    margin: 0 0 var(--space-2);
 }
 
 /* Buttons */
