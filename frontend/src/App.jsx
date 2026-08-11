@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Layout from './components/Layout.jsx';
 
+import Landing from './pages/Landing.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import PatientDashboard from './pages/patient/Dashboard.jsx';
@@ -13,9 +14,11 @@ import StaffDashboard from './pages/staff/Dashboard.jsx';
 
 import './App.css';
 
+// Logged-out visitors land on the marketing page. Logged-in users skip
+// straight to the screen relevant to their role.
 function Home() {
     const { user } = useAuth();
-    if (!user) return <Navigate to="/login" replace />;
+    if (!user) return <Landing />;
     return <Navigate to={user.role === 'PATIENT' ? '/dashboard' : '/staff'} replace />;
     }
 
