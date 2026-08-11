@@ -2,7 +2,8 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
-
+// A quiet trace line under page headers, standing in for a chart's vitals
+// line without being literal about it. Used once per page, sparingly.
 function TraceLine() {
     return (
         <svg width="120" height="10" viewBox="0 0 120 10" fill="none" aria-hidden="true">
@@ -38,6 +39,7 @@ function TraceLine() {
     }
 
     const links = user ? NAV_LINKS[user.role] || [] : [];
+    const onAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
     return (
         <div className="app-shell">
@@ -66,6 +68,13 @@ function TraceLine() {
                 <button type="button" className="btn-logout" onClick={handleLogout}>
                 Log out
                 </button>
+            </div>
+            )}
+
+            {!user && !onAuthPage && (
+            <div className="header-cta">
+                <Link to="/login" className="header-cta__secondary">Log in</Link>
+                <Link to="/register" className="header-cta__primary">Get started</Link>
             </div>
             )}
         </header>
