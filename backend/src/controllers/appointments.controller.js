@@ -13,10 +13,12 @@ const symptomsSchema = z.object({
   symptomNotes: z.string().optional(),
 });
 
+
+const CANCELLATION_WINDOW_HOURS = Number(process.env.CANCELLATION_WINDOW_HOURS) || 24;
+
 async function getOwnProfile(userId) {
   return prisma.patientProfile.findUnique({ where: { userId } });
 }
-
 
 async function book(req, res) {
   const data = bookSchema.parse(req.body);
@@ -46,7 +48,6 @@ async function book(req, res) {
   res.status(201).json(appointment);
 }
 
-
 async function listMine(req, res) {
   const profile = await getOwnProfile(req.user.id);
   if (!profile) return res.status(404).json({ error: 'Patient profile not found' });
@@ -59,17 +60,26 @@ async function listMine(req, res) {
   res.json(appointments);
 }
 
-
 async function cancel(req, res) {
   const profile = await getOwnProfile(req.user.id);
-  const appointment = await prisma.appointment.findUnique({ where: { id: req.params.id } });
+  const appointment = await prisma.appointment.findUnique({
+    where: { id: req.params.id },
+    include: { slot: true },
+  });
 
   if (!appointment || appointment.patientId !== profile.id) {
     return res.status(404).json({ error: 'Appointment not found' });
   }
+  if (appointment.status === 'CANCELLED') {
+    return res.status(409).json({ error: 'Appointment is already cancelled' });
+  }
 
-  // TODO: enforce the configurable cancellation window (e.g. 24h) here,
-  // comparing now() to appointment.slot.startTime once fetched.
+  const hoursUntilStart = (appointment.slot.startTime.getTime() - Date.now()) / (1000 * 60 * 60);
+  if (hoursUntilStart < CANCELLATION_WINDOW_HOURS) {
+    return res.status(409).json({
+      error: `Appointments can only be cancelled at least ${CANCELLATION_WINDOW_HOURS} hours in advance. Please call the clinic to cancel this one.`,
+    });
+  }
 
   await prisma.$transaction([
     prisma.appointment.update({ where: { id: appointment.id }, data: { status: 'CANCELLED' } }),
@@ -78,7 +88,6 @@ async function cancel(req, res) {
 
   res.status(204).end();
 }
-
 
 async function updateSymptoms(req, res) {
   const data = symptomsSchema.parse(req.body);
