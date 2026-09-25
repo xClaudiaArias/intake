@@ -37,7 +37,7 @@ export default function Register() {
             <input value={form.name} onChange={update('name')} required />
           </label>
           <label>
-            Date of birth
+            Date of birth (D.O.B)
             <input type="date" value={form.dob} onChange={update('dob')} required />
           </label>
           <label>

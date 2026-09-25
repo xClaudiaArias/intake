@@ -314,9 +314,7 @@ select:disabled { background: var(--surface-sunken); color: var(--ink-faint); }
   margin: 0 0 var(--space-2);
 }
 
-/* ============================================
-   Buttons
-   ============================================ */
+/* Buttons */
 button {
   font-family: var(--font-body);
   padding: var(--space-3) var(--space-4);
@@ -399,9 +397,7 @@ td:has(button) button {
   font-size: 0.8rem;
 }
 
-/* ============================================
-   Slot list (booking page)
-   ============================================ */
+/* Slot list (booking page) */
 .slot-list {
   list-style: none;
   padding: 0;
