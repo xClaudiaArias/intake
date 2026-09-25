@@ -17,9 +17,6 @@ async function recordAudit({ actorId, action, targetType, targetId }) {
       data: { actorId, action, targetType, targetId },
     });
   } catch (err) {
-    // Audit logging should never crash the primary request.
-    // In production this should also alert - a silent audit failure
-    // is itself a compliance issue.
     console.error('Failed to write audit log:', err.message);
   }
 }
