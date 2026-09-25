@@ -76,7 +76,6 @@ function useSection(initial) {
         if (form.lifestyle) setLifestyle((prev) => ({ ...prev, ...form.lifestyle }));
         if (form.consent) setConsent((prev) => ({ ...prev, ...form.consent }));
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     function toggleCondition(condition) {
@@ -145,7 +144,7 @@ function useSection(initial) {
 
         <form onSubmit={saveDraft} style={{ maxWidth: '640px', gap: 'var(--space-6)' }}>
 
-            {/* ---------------- Personal / Demographic Information ---------------- */}
+            {/* Personal / Demographic Information */}
             <section className="card">
             <h2>Personal information</h2>
             <div className="form-grid">
@@ -213,7 +212,7 @@ function useSection(initial) {
             </div>
             </section>
 
-            {/* ---------------- Emergency Contact ---------------- */}
+            {/* Emergency Contact */}
             <section className="card">
             <h2>Emergency contact</h2>
             <div className="form-grid">
@@ -232,7 +231,7 @@ function useSection(initial) {
             </div>
             </section>
 
-            {/* ---------------- Insurance ---------------- */}
+            {/* Insurance */}
             <section className="card">
             <h2>Insurance information</h2>
             <div className="form-grid">
@@ -275,7 +274,7 @@ function useSection(initial) {
             </div>
             </section>
 
-            {/* ---------------- Medical History ---------------- */}
+            {/* Medical History */}
             <section className="card">
             <h2>Medical history</h2>
             <div className="form-grid">
@@ -322,7 +321,7 @@ function useSection(initial) {
             </label>
             </section>
 
-            {/* ---------------- Lifestyle ---------------- */}
+            {/* Lifestyle */}
             <section className="card">
             <h2>Lifestyle &amp; social history</h2>
             <div className="form-grid">
@@ -356,7 +355,7 @@ function useSection(initial) {
             </div>
             </section>
 
-            {/* ---------------- Consent ---------------- */}
+            {/* Consent */}
             <section className="card">
             <h2>Consent &amp; acknowledgment</h2>
             <label className="checkbox-label">

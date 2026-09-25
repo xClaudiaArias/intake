@@ -30,9 +30,6 @@ function issueTokens(user) {
   return { accessToken, refreshToken };
 }
 
-// POST /api/v1/auth/register
-// Self-registration is PATIENT-only. Staff/Admin accounts are created by an
-// Admin via a separate endpoint (see users.controller) - see FR-1.4 in the SRS.
 async function register(req, res) {
   const data = registerSchema.parse(req.body);
 
@@ -90,7 +87,6 @@ async function login(req, res) {
   });
 }
 
-// POST /api/v1/auth/refresh
 async function refresh(req, res) {
   const { refreshToken } = req.body;
   if (!refreshToken) {

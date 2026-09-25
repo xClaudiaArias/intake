@@ -6,7 +6,6 @@ const createSlotSchema = z.object({
   endTime: z.string().refine((v) => !isNaN(Date.parse(v)), 'Invalid endTime'),
 });
 
-// GET /api/v1/slots?from=&to=  (anyone authenticated: only available slots) - FR-3.1
 async function listAvailable(req, res) {
   const { from, to } = req.query;
   const where = { isAvailable: true };
@@ -20,7 +19,6 @@ async function listAvailable(req, res) {
   res.json(slots);
 }
 
-// POST /api/v1/slots  (staff/admin) - FR-3.3
 async function create(req, res) {
   const data = createSlotSchema.parse(req.body);
   const slot = await prisma.slot.create({
@@ -29,7 +27,6 @@ async function create(req, res) {
   res.status(201).json(slot);
 }
 
-// DELETE /api/v1/slots/:id  (staff/admin) - block off a slot
 async function remove(req, res) {
   await prisma.slot.delete({ where: { id: req.params.id } });
   res.status(204).end();

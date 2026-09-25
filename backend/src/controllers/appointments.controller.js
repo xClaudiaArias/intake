@@ -99,7 +99,6 @@ async function updateSymptoms(req, res) {
   res.json(updated);
 }
 
-// GET /api/v1/appointments/today  (staff dashboard) - FR-5.1
 async function listToday(req, res) {
   const start = new Date();
   start.setHours(0, 0, 0, 0);

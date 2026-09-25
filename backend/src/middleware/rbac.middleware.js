@@ -1,7 +1,3 @@
-/**
- * Restricts a route to the given roles. Must run after requireAuth.
- * Usage: router.get('/staff-only', requireAuth, requireRole('STAFF', 'ADMIN'), handler)
- */
 function requireRole(...allowedRoles) {
   return (req, res, next) => {
     if (!req.user) {
